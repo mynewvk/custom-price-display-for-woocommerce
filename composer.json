@@ -1,0 +1,32 @@
+{
+  "name": "mynewvk/custom-price-display-for-woocommerce",
+  "type": "wordpress-plugin",
+  "authors": [
+    {
+      "name": "Kolya Lukin"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "CustomPriceDisplay\\": "src"
+    }
+  },
+  "require-dev": {
+    "woocommerce/woocommerce-sniffs": ">0.0.1"
+  },
+  "scripts": {
+    "build": "php PluginBuilder.php",
+    "make-pot": "wp i18n make-pot ./ languages/custom-price-display-for-woocommerce.pot --exclude=\"freemius,vendor\" --skip-js --domain=\"custom-price-display-for-woocommerce\"",
+    "freemius-build": "zip -r custom-price-display-for-woocommerce.zip ./ -x \"*.DS_Store\" -x \"*.git*\" -x \"phpcs.xml\" -x \"composer.lock\" -x \"composer.json\" && unzip custom-price-display-for-woocommerce.zip -d custom-price-display-for-woocommerce && rm custom-price-display-for-woocommerce.zip && zip -r custom-price-display-for-woocommerce.zip custom-price-display-for-woocommerce && rm -rf ./custom-price-display-for-woocommerce",
+    "check": "/opt/homebrew/opt/php@7.4/bin/php ./vendor/bin/phpcs --standard=phpcs.xml -s --warning-severity=0 --ignore-annotations --extensions=php,html",
+    "fix": "/opt/homebrew/opt/php@7.4/bin/php ./vendor/bin/phpcbf --standard=phpcs.xml --warning-severity=0 --ignore-annotations --extensions=php,html"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  },
+  "require": {
+    "freemius/wordpress-sdk": "^2.12"
+  }
+}

@@ -1,0 +1,185 @@
+<?php namespace CustomPriceDisplay\Settings;
+
+use CustomPriceDisplay\Core\ServiceContainerTrait;
+use CustomPriceDisplay\Settings\CustomOptions\Checkbox;
+use CustomPriceDisplay\Settings\CustomOptions\MultipleTextInputs;
+use CustomPriceDisplay\Settings\CustomOptions\RichText;
+use CustomPriceDisplay\Settings\CustomOptions\SelectedProducts;
+use CustomPriceDisplay\Settings\CustomOptions\SwitchOption;
+use CustomPriceDisplay\Settings\Sections\Section;
+use CustomPriceDisplay\Settings\Sections\VariableProducts;
+
+/**
+ * Class Settings
+ *
+ * @package CustomPriceDisplay\Settings
+ */
+class Settings {
+	
+	use ServiceContainerTrait;
+	
+	const SETTINGS_PREFIX = 'custom_price_display_';
+	
+	const SETTINGS_SECTION = 'custom_price_display_settings';
+	
+	/**
+	 * Settings
+	 *
+	 * @var array
+	 */
+	private $settings = array();
+	
+	/**
+	 * Settings sections
+	 *
+	 * @var Section[]
+	 */
+	protected $sections = array();
+	
+	/**
+	 * Conditionals for settings
+	 *
+	 * @var array
+	 */
+	protected $conditionals = array();
+	
+	/**
+	 * Settings constructor.
+	 */
+	public function __construct() {
+		$this->initCustomOptions();
+		$this->hooks();
+	}
+	
+	protected function initCustomOptions() {
+		$this->getContainer()->add( 'settings.custom_options.checkbox', new Checkbox() );
+		$this->getContainer()->add( 'settings.custom_options.switch-option', new SwitchOption() );
+		$this->getContainer()->add( 'settings.custom_options.multiple-text-inputs', new MultipleTextInputs() );
+		$this->getContainer()->add( 'settings.custom_options.rich-text', new RichText() );
+		$this->getContainer()->add( 'settings.custom_options.selected-products', new SelectedProducts() );
+	}
+	
+	/**
+	 * Register hooks
+	 */
+	public function hooks() {
+		
+		$this->initSections();
+		
+		add_filter( 'woocommerce_get_sections_products', array( $this, 'addSettingsSection' ), 50 );
+		add_filter( 'woocommerce_get_settings_products', function ( $settings, $current_section ) {
+			if ( self::SETTINGS_SECTION === $current_section ) {
+				return $this->getSettings();
+			}
+			
+			return $settings;
+		}, 10, 2 );
+		
+		add_action( 'admin_footer', function () {
+			if ( empty( $this->conditionals ) ) {
+				return;
+			}
+			
+			?>
+			<script>
+				window.customPriceDisplaySettingsConditionals = <?php
+				echo wp_json_encode( $this->conditionals, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT );
+				?>;
+			</script>
+			<?php
+		} );
+	}
+	
+	public function initSections() {
+		$this->sections = array(
+			new VariableProducts(),
+		);
+	}
+	
+	public function getVariableProductsSection(): ?VariableProducts {
+		foreach ( $this->sections as $section ) {
+			if ( $section instanceof VariableProducts ) {
+				return $section;
+			}
+		}
+		
+		return null;
+	}
+	
+	public function getSettings(): array {
+		
+		$settings = array();
+		
+		foreach ( $this->sections as $section ) {
+			$settings[] = array(
+				'title' => $section->getName(),
+				'type'  => 'title',
+				'desc'  => $section->getDescription(),
+				'id'    => self::SETTINGS_SECTION . '_' . $section->getSlug(),
+			);
+			
+			$settings = array_merge( $settings, $section->getSettings() );
+			
+			$settings[] = array(
+				'type' => 'sectionend',
+				'id'   => self::SETTINGS_SECTION . '_' . $section->getSlug(),
+			);
+		}
+		
+		$this->collectConditions( $settings );
+		
+		return $settings;
+	}
+	
+	public function collectConditions( array $settings ) {
+		
+		foreach ( $settings as $setting ) {
+			
+			$conditionals = isset( $setting['conditionals'] ) ? (array) $setting['conditionals'] : array();
+			
+			$_conditionals = array();
+			
+			foreach ( $conditionals as $conditional ) {
+				$_conditionals[ $conditional['id'] ] = $conditional['value'] ?? array();
+			}
+			
+			$this->conditionals[ $setting['id'] ] = $_conditionals;
+		}
+	}
+	
+	public function addSettingsSection( $tabs ): array {
+		
+		$newTabs = array();
+		
+		foreach ( $tabs as $key => $tab ) {
+			$newTabs[ $key ] = $tab;
+			
+			if ( "" === $key ) {
+				$newTabs[ self::SETTINGS_SECTION ] = __( 'Custom price display', 'custom-price-display-for-woocommerce' );
+			}
+		}
+		
+		return $newTabs;
+	}
+	
+	/**
+	 * Get setting by name
+	 *
+	 * @param  string  $optionName
+	 * @param  mixed  $default
+	 *
+	 * @return mixed
+	 */
+	public function get( string $optionName, $default = null ) {
+		return get_option( self::SETTINGS_PREFIX . $optionName, $default );
+	}
+	
+	/**
+	 * Get url to settings page
+	 *
+	 * @return string
+	 */
+	public function getLink(): string {
+		return admin_url( 'admin.php?page=wc-settings&tab=products&section=' . self::SETTINGS_SECTION );
+	}
+}
