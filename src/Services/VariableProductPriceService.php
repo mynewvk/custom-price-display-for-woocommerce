@@ -115,17 +115,12 @@ class VariableProductPriceService {
 			$basePrice = $product->get_variation_price( 'max', true );
 		} elseif ( 'custom' === $productPriceConfig->getProperty( 'price_display_format' ) ) {
 			
-			if ( cpdfw_fs()->can_use_premium_code__premium_only() ) {
-				
-				$priceTemplate = $productPriceConfig->getProperty( 'custom_price_template' );
-				
-				$priceHTML = str_replace( [ '{cpdfw_lowest_price}', '{cpdfw_highest_price}' ], [
-					wc_price( $product->get_variation_price( 'min', true ) ),
-					wc_price( $product->get_variation_price( 'max', true ) ),
-				], $priceTemplate );
-			} else {
-				return $defaultPriceHTML;
-			}
+			$priceTemplate = $productPriceConfig->getProperty( 'custom_price_template' );
+			
+			$priceHTML = str_replace( [ '{cpdfw_lowest_price}', '{cpdfw_highest_price}' ], [
+				wc_price( $product->get_variation_price( 'min', true ) ),
+				wc_price( $product->get_variation_price( 'max', true ) ),
+			], $priceTemplate );
 			
 		} else {
 			return $defaultPriceHTML;

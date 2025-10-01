@@ -18,18 +18,9 @@ class CustomPriceDisplayPlugin {
 	
 	protected $mainFile;
 	
-	/**
-	 * License Instance
-	 *
-	 * @var License
-	 */
-	protected $license;
-	
 	public function __construct( string $mainFile ) {
 		
 		$this->mainFile = $mainFile;
-		
-		$this->license = new License();
 		
 		$this->bootCoreServices();
 		$this->declareCompatibilities();
@@ -130,19 +121,6 @@ class CustomPriceDisplayPlugin {
 		
 		$links['docs'] = '<a target="_blank" href="' . self::getDocumentationURL() . '">' . __( 'Documentation',
 				'custom-price-display-for-woocommerce' ) . '</a>';
-		
-		$links['contact-us'] = '<a href="' . self::getContactUsURL() . '"><b style="color: green">' . __( 'Contact Us',
-				'custom-price-display-for-woocommerce' ) . '</b></a>';
-		
-		if ( ! cpdfw_fs()->is_anonymous() && cpdfw_fs()->is_installed_on_site() ) {
-			$links['account'] = '<a href="' . self::getAccountPageURL() . '"><b>' . __( 'Account',
-					'custom-price-display-for-woocommerce' ) . '</b></a>';
-		}
-		
-		if ( ! cpdfw_fs()->can_use_premium_code() ) {
-			$links['go-premium'] = '<a href="' . cpdfw_fs_activation_url() . '"><b style="color: red">' . __( 'Upgrade to Premium',
-					'custom-price-display-for-woocommerce' ) . '</b></a>';
-		}
 		
 		return $links;
 	}

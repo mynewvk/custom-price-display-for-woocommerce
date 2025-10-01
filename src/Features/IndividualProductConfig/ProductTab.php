@@ -96,17 +96,6 @@ class ProductTab {
 			</div>
 
 			<div style="max-width: 100%; width: 500px;">
-
-				<?php if ( ! cpdfw_fs()->can_use_premium_code() ): ?>
-					<div style="color: red; margin-bottom: 10px">
-						<?php esc_html_e( 'This feature is available only in the premium version.',
-								'custom-price-display-for-woocommerce' ); ?>
-						<a href="<?php echo esc_html( cpdfw_fs_activation_url() ) ?>" target="_blank">
-							<?php esc_html_e( 'Upgrade your plan', 'custom-price-display-for-woocommerce' ); ?>
-						</a>
-					</div>
-				<?php endif; ?>
-
 				<?php WPEditor::instance()->render( $args['id'], $args['value'], $args['placeholders'] ); ?>
 
 				<?php if ( $args['description'] ): ?>

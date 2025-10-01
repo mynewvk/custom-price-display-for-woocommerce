@@ -64,14 +64,6 @@ class RichText {
 							echo wp_kses_post( $value['desc'] );
 						?>
 					</p>
-					<?php if ( ! cpdfw_fs()->can_use_premium_code() ): ?>
-						<p style="color: red">
-							<?php esc_html_e( 'This feature is available only in the premium version.',
-									'custom-price-display-for-woocommerce' ); ?>
-							<a href="<?php echo esc_html( cpdfw_fs_activation_url() ) ?>">
-								<?php esc_html_e( 'Upgrade your plan', 'custom-price-display-for-woocommerce' ); ?></a>
-						</p>
-					<?php endif; ?>
 				<?php endif; ?>
 			</td>
 		</tr>
