@@ -152,7 +152,7 @@ class FileManager {
 		if ( defined( 'CUSTOM_PRICE_DISPLAY_IS_PRODUCTION' ) ) {
 			$js = '.min.js';
 		}
-		
+
 		return apply_filters( 'custom_price_display/assets/js/url', $this->pluginUrl . 'assets/' . $file . $js, $file );
 	}
 	

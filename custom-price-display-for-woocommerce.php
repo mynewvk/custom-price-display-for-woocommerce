@@ -42,13 +42,13 @@
 		return;
 	}
 	
-	if ( ! function_exists( 'cpd_initFreemius' ) ) {
-		function cpd_initFreemius() {
+	if ( ! function_exists( 'cpdfw_initFreemius' ) ) {
+		function cpdfw_initFreemius() {
 			
-			function cpd_fs() {
-				global $cpd_fs;
+			function cpdfw_fs() {
+				global $cpdfw_fs;
 				
-				if ( ! isset( $cpd_fs ) ) {
+				if ( ! isset( $cpdfw_fs ) ) {
 					// Include Freemius SDK.
 					require_once dirname( __FILE__ ) . '/vendor/freemius/wordpress-sdk/start.php';
 					
@@ -56,7 +56,7 @@
 						define( 'WP_FS__PRODUCT_20371_MULTISITE', true );
 					}
 					
-					$cpd_fs = fs_dynamic_init( array(
+					$cpdfw_fs = fs_dynamic_init( array(
 						'id'                  => '20371',
 						'slug'                => 'custom-price-display-for-woocommerce',
 						'type'                => 'plugin',
@@ -81,29 +81,29 @@
 					) );
 				}
 				
-				return $cpd_fs;
+				return $cpdfw_fs;
 			}
 			
 			// Init Freemius.
-			cpd_fs();
+			cpdfw_fs();
 			
 			// Signal that SDK was initiated.
-			do_action( 'cpd_fs_loaded' );
+			do_action( 'cpdfw_fs_loaded' );
 		}
 	}
-	if ( ! function_exists( 'cpd_fs_activation_url' ) ) {
-		function cpd_fs_activation_url(): ?string {
-			return cpd_fs()->is_activation_mode() ? cpd_fs()->get_activation_url() : cpd_fs()->get_upgrade_url();
+	if ( ! function_exists( 'cpdfw_fs_activation_url' ) ) {
+		function cpdfw_fs_activation_url(): ?string {
+			return cpdfw_fs()->is_activation_mode() ? cpdfw_fs()->get_activation_url() : cpdfw_fs()->get_upgrade_url();
 		}
 	}
 	
-	if ( function_exists( 'cpd_fs' ) ) {
-		cpd_fs()->set_basename( true, __FILE__ );
+	if ( function_exists( 'cpdfw_fs' ) ) {
+		cpdfw_fs()->set_basename( true, __FILE__ );
 		
 		return;
 	} else {
 		
-		cpd_initFreemius();
+		cpdfw_initFreemius();
 		
 		call_user_func( function () {
 			

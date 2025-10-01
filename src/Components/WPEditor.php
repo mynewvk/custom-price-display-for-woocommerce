@@ -37,7 +37,7 @@ class WPEditor {
 			// Empty script to include custom variables for the mce.js script
 			wp_register_script( 'custom-price-display__mce-editor-localized', '', array(),
 				CustomPriceDisplayPlugin::VERSION, true );
-			
+
 			$plugins['custom-price-display-custom-mce-buttons'] = $this->getContainer()->getFileManager()->locateJSAsset( 'admin/mce' );
 			
 			return $plugins;
