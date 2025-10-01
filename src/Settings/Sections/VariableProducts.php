@@ -61,11 +61,11 @@ class VariableProducts extends Section {
 				'id'           => $this->getOptionId( 'custom_price_template' ),
 				'type'         => RichText::FIELD_TYPE,
 				'placeholders' => array(
-					'cpd_lowest_price',
-					'cpd_highest_price',
+					'cpdfw_lowest_price',
+					'cpdfw_highest_price',
 				),
-				'default'      => __( 'From {cpd_lowest_price}', 'custom-price-display-for-woocommerce' ),
-				'desc'         => __( 'Use variables <code>cpd_lowest_price</code> and <code>cpd_highest_price</code> to define custom price string.',
+				'default'      => __( 'From {cpdfw_lowest_price}', 'custom-price-display-for-woocommerce' ),
+				'desc'         => __( 'Use variables <code>cpdfw_lowest_price</code> and <code>cpdfw_highest_price</code> to define custom price string.',
 					'custom-price-display-for-woocommerce' ),
 				'conditionals' => array(
 					array(

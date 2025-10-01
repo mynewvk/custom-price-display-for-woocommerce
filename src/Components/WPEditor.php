@@ -1,23 +1,26 @@
 <?php namespace CustomPriceDisplay\Components;
 
 use CustomPriceDisplay\Core\ServiceContainerTrait;
+use CustomPriceDisplay\CustomPriceDisplayPlugin;
 
 class WPEditor {
 	
 	use ServiceContainerTrait;
 	
-	protected static $instance = null;
+	protected static ?self $instance = null;
 	
-	protected $editors = array();
+	protected array $editors = array();
 	
 	protected function __construct() {
+		
 		add_action( 'admin_footer', function () {
-			?>
-			<script>
-				const customPriceDisplayMCEAvailableVariables = JSON.parse('<?php echo wp_kses_post( wp_json_encode( $this->getAvailableVariables() ) ); ?>');
-				const customPriceDisplayMCEEditors = JSON.parse('<?php echo wp_kses_post( wp_json_encode( $this->editors ) )?>');
-			</script>
-			<?php
+			
+			wp_localize_script( 'custom-price-display__mce-editor-localized', 'custom_price_display_mce_data', array(
+				'variables' => $this->getAvailableVariables(),
+				'editors'   => $this->editors,
+			) );
+			
+			wp_enqueue_script( 'custom-price-display__mce-editor-localized' );
 		} );
 		
 		add_filter( 'mce_buttons', function ( $buttons, $editorId ) {
@@ -29,12 +32,17 @@ class WPEditor {
 			return array_merge( $buttons, array_keys( $this->getAvailableVariables() ) );
 		}, 10, 2 );
 		
-		add_filter( 'mce_external_plugins', function ( $plugins, $editor ) {
-
+		add_filter( 'mce_external_plugins', function ( $plugins ) {
+			
+			// Empty script to include custom variables for the mce.js script
+			wp_register_script( 'custom-price-display__mce-editor-localized', '', array(),
+				CustomPriceDisplayPlugin::VERSION, true );
+			
 			$plugins['custom-price-display-custom-mce-buttons'] = $this->getContainer()->getFileManager()->locateJSAsset( 'admin/mce' );
 			
 			return $plugins;
-		}, 9999, 2 );
+			
+		}, 9999 );
 	}
 	
 	public static function instance(): self {
@@ -46,15 +54,9 @@ class WPEditor {
 	}
 	
 	public function render( $id, $content, $placeholders, array $settings = array() ): void {
-		?>
-		<style>
-			#wp-<?php echo esc_html($id); ?>-editor-tools {
-				display: none !important;
-			}
-		</style>
-		<?php
-		
 		$this->editors[] = $id;
+		
+		$editorCSS = "#wp-{$id}-wrap { max-width: 800px; }";
 		
 		$settings = wp_parse_args( $settings, array(
 			'wpautop'       => true,
@@ -63,7 +65,7 @@ class WPEditor {
 			'textarea_name'    => $id,
 			'editor_height'    => 30,
 			'tabindex'         => null,
-			'editor_class'     => 'cpd-message-template-mce',
+			'editor_class'     => 'cpdfw-message-template-mce',
 			'tinymce'          => array(
 				'resize'   => 'vertical',
 				'menubar'  => false,
@@ -79,6 +81,7 @@ class WPEditor {
 					'spellchecker',
 				), $placeholders ) ),
 			),
+			//'editor_css'       => '<style>' . $editorCSS . '</style>',
 			'quicktags'        => array(
 				'id'      => $id,
 				'buttons' => 'strong,em,del',
@@ -91,17 +94,17 @@ class WPEditor {
 	
 	protected function getAvailableVariables(): array {
 		return array(
-			'cpd_lowest_price'  => array(
+			'cpdfw_lowest_price'  => array(
 				'name'        => __( 'Lowest Price', 'custom-price-display-for-woocommerce' ),
-				'description' => __( '{cpd_lowest_price} - lowest price of the variable product.',
+				'description' => __( '{cpdfw_lowest_price} - lowest price of the variable product.',
 					'custom-price-display-for-woocommerce' ),
-				'variableKey' => '{cpd_lowest_price}',
+				'variableKey' => '{cpdfw_lowest_price}',
 			),
-			'cpd_highest_price' => array(
+			'cpdfw_highest_price' => array(
 				'name'        => __( 'Highest Price', 'custom-price-display-for-woocommerce' ),
-				'description' => __( '{cpd_highest_price} - highest price of the variable product.',
+				'description' => __( '{cpdfw_highest_price} - highest price of the variable product.',
 					'custom-price-display-for-woocommerce' ),
-				'variableKey' => '{cpd_highest_price}',
+				'variableKey' => '{cpdfw_highest_price}',
 			),
 		);
 	}

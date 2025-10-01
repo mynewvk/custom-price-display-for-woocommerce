@@ -51,7 +51,7 @@ class PriceConfig {
 	
 	public function isActiveForProduct(): bool {
 		
-		if ( cpd_fs()->can_use_premium_code__premium_only() ) {
+		if ( cpdfw_fs()->can_use_premium_code__premium_only() ) {
 			
 			if ( 'all' === $this->getProperty( 'enable_for' ) ) {
 				return true;

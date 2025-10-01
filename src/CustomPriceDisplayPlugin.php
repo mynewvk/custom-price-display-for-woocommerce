@@ -99,16 +99,13 @@ class CustomPriceDisplayPlugin {
 	
 	public function enqueueScripts( $screen ) {
 		
-		wp_enqueue_style( 'custom-price-display__settings-style',
-			$this->getContainer()->getFileManager()->locateAsset( 'admin/settings.css' ), array(),
+		wp_enqueue_style( 'custom-price-display__main-style',
+			$this->getContainer()->getFileManager()->locateAsset( 'admin/main.css' ), array(),
 			CustomPriceDisplayPlugin::VERSION );
 		
-		// Only load on settings page
-		if ( 'woocommerce_page_wc-settings' === $screen ) {
-			wp_enqueue_script( 'custom-price-display__settings-script',
-				$this->getContainer()->getFileManager()->locateJSAsset( 'admin/settings' ), array(),
-				CustomPriceDisplayPlugin::VERSION, true );
-		}
+		wp_enqueue_script( 'custom-price-display__main-script',
+			$this->getContainer()->getFileManager()->locateJSAsset( 'admin/main' ), array(),
+			CustomPriceDisplayPlugin::VERSION, true );
 	}
 	
 	/**
@@ -137,13 +134,13 @@ class CustomPriceDisplayPlugin {
 		$links['contact-us'] = '<a href="' . self::getContactUsURL() . '"><b style="color: green">' . __( 'Contact Us',
 				'custom-price-display-for-woocommerce' ) . '</b></a>';
 		
-		if ( ! cpd_fs()->is_anonymous() && cpd_fs()->is_installed_on_site() ) {
+		if ( ! cpdfw_fs()->is_anonymous() && cpdfw_fs()->is_installed_on_site() ) {
 			$links['account'] = '<a href="' . self::getAccountPageURL() . '"><b>' . __( 'Account',
 					'custom-price-display-for-woocommerce' ) . '</b></a>';
 		}
 		
-		if ( ! cpd_fs()->can_use_premium_code() ) {
-			$links['go-premium'] = '<a href="' . cpd_fs_activation_url() . '"><b style="color: red">' . __( 'Upgrade to Premium',
+		if ( ! cpdfw_fs()->can_use_premium_code() ) {
+			$links['go-premium'] = '<a href="' . cpdfw_fs_activation_url() . '"><b style="color: red">' . __( 'Upgrade to Premium',
 					'custom-price-display-for-woocommerce' ) . '</b></a>';
 		}
 		
@@ -154,7 +151,7 @@ class CustomPriceDisplayPlugin {
 	 * Fired after plugin's uninstall
 	 */
 	public static function uninstall() {
-		delete_option( 'cpd_plugin_activation_timestamp' );
+		delete_option( 'cpdfw_plugin_activation_timestamp' );
 	}
 	
 	/**
@@ -169,13 +166,13 @@ class CustomPriceDisplayPlugin {
 	}
 	
 	public function saveActivationTime() {
-		if ( ! get_option( 'cpd_plugin_activation_timestamp', false ) ) {
-			update_option( 'cpd_plugin_activation_timestamp', time() );
+		if ( ! get_option( 'cpdfw_plugin_activation_timestamp', false ) ) {
+			update_option( 'cpdfw_plugin_activation_timestamp', time() );
 		}
 	}
 	
 	public static function getPluginActivationDate(): ?int {
-		return intval( get_option( 'cpd_plugin_activation_timestamp', 0 ) );
+		return intval( get_option( 'cpdfw_plugin_activation_timestamp', 0 ) );
 	}
 	
 	public static function getContactUsURL(): string {

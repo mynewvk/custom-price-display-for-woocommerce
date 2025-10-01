@@ -71,58 +71,6 @@ class SelectedProducts {
 		$optionValue = $value['value'];
 		?>
 
-		<style>
-			.custom-price-display-selected-products {
-
-			}
-
-			.custom-price-display-selected-products-section {
-				background: #fff;
-				padding: 1px 30px 30px 30px;
-				max-width: 800px;
-				overflow: hidden;
-				box-sizing: border-box;
-			}
-
-			.custom-price-display-selected-products-section__title {
-				margin: 20px 0;
-				border-bottom: 1px solid #e8e8e8;
-				font-size: 1.35em;
-				font-weight: 300;
-				padding: 15px 0;
-			}
-
-			.custom-price-display-selected-products-section__hint {
-				padding: 10px 10px;
-				border: 1px solid var(--wp-admin-theme-color-darker-10, #2c3e50);
-				background: var(--wp-components-color-accent, var(--wp-admin-theme-color, #3858e9));
-				color: #fff;
-				margin-bottom: 20px;
-			}
-
-			.custom-price-display-selected-products-section-row {
-				margin: 10px 0;
-				display: flex;
-				gap: 30px;
-				padding-right: 15px;
-			}
-
-			.custom-price-display-selected-products-section-row__label {
-				width: 20%;
-				min-width: 150px;
-				white-space: nowrap;
-				font-size: .8rem;
-			}
-
-			.custom-price-display-selected-products-section-row__value {
-				width: 100%;
-			}
-
-			.custom-price-display-selected-products .wc-product-search {
-				width: 100% !important;
-			}
-		</style>
-
 		<tr valign="top">
 			<th scope="row" class="titledesc">
 				<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
@@ -130,11 +78,11 @@ class SelectedProducts {
 
 			<td class="forminp forminp-<?php echo esc_attr( sanitize_title( $value['type'] ) ); ?>">
 				
-				<?php if ( ! cpd_fs()->can_use_premium_code() ): ?>
+				<?php if ( ! cpdfw_fs()->can_use_premium_code() ): ?>
 					<div style="color: red;margin: 10px 0;max-width: 800px;width: 90%;background: #fff; padding: 15px; box-sizing: border-box;font-weight: 500;">
 						<?php esc_html_e( 'This feature is available only in the premium version.',
 							'custom-price-display-for-woocommerce' ); ?>
-						<a href="<?php echo esc_html( cpd_fs_activation_url() ) ?>">
+						<a href="<?php echo esc_html( cpdfw_fs_activation_url() ) ?>">
 							<?php esc_html_e( 'Upgrade your plan', 'custom-price-display-for-woocommerce' ); ?></a>
 					</div>
 				<?php endif; ?>

@@ -26,7 +26,7 @@ class IndividualProductConfig extends Feature {
 	}
 	
 	public function adjustProductPriceConfig( $config, $productId ) {
-		$productPriceData = get_post_meta( $productId, '_cpd_custom_price_data', true );
+		$productPriceData = get_post_meta( $productId, '_cpdfw_custom_price_data', true );
 		
 		if ( ! is_array( $productPriceData ) ) {
 			return $config;

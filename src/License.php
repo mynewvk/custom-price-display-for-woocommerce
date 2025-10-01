@@ -36,8 +36,8 @@ class License {
 	}
 	
 	public function init() {
-		if ( function_exists( 'cpd_fs' ) ) {
-			$this->instance = cpd_fs();
+		if ( function_exists( 'cpdfw_fs' ) ) {
+			$this->instance = cpdfw_fs();
 		}
 	}
 	

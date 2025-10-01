@@ -1,6 +1,7 @@
 <?php namespace CustomPriceDisplay\Settings;
 
 use CustomPriceDisplay\Core\ServiceContainerTrait;
+use CustomPriceDisplay\CustomPriceDisplayPlugin;
 use CustomPriceDisplay\Settings\CustomOptions\Checkbox;
 use CustomPriceDisplay\Settings\CustomOptions\MultipleTextInputs;
 use CustomPriceDisplay\Settings\CustomOptions\RichText;
@@ -75,19 +76,23 @@ class Settings {
 			return $settings;
 		}, 10, 2 );
 		
-		add_action( 'admin_footer', function () {
-			if ( empty( $this->conditionals ) ) {
-				return;
+		add_action( 'admin_enqueue_scripts', function ( $screen ) {
+			// Only load on settings page
+			if ( 'woocommerce_page_wc-settings' === $screen ) {
+				wp_register_script( 'custom-price-display__settings-script',
+					$this->getContainer()->getFileManager()->locateJSAsset( 'admin/settings' ), array(),
+					CustomPriceDisplayPlugin::VERSION, true );
 			}
-			
-			?>
-			<script>
-				window.customPriceDisplaySettingsConditionals = <?php
-				echo wp_json_encode( $this->conditionals, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT );
-				?>;
-			</script>
-			<?php
 		} );
+		
+		add_action( 'admin_footer', function () {
+			
+			wp_localize_script( 'custom-price-display__settings-script', 'customPriceDisplaySettingsConditionals',
+				$this->conditionals );
+			
+			wp_enqueue_script( 'custom-price-display__settings-script' );
+			
+		}, - 999 );
 	}
 	
 	public function initSections() {
@@ -155,7 +160,8 @@ class Settings {
 			$newTabs[ $key ] = $tab;
 			
 			if ( "" === $key ) {
-				$newTabs[ self::SETTINGS_SECTION ] = __( 'Custom price display', 'custom-price-display-for-woocommerce' );
+				$newTabs[ self::SETTINGS_SECTION ] = __( 'Custom price display',
+					'custom-price-display-for-woocommerce' );
 			}
 		}
 		

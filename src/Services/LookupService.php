@@ -7,8 +7,8 @@ class LookupService {
 	
 	use ServiceContainerTrait;
 	
-	const CATEGORIES_SEARCH_ACTION = 'woocommerce_json_search_cpd_categories';
-	const VARIABLE_PRODUCTS_SEARCH_ACTION = 'woocommerce_json_search_cpd_variable_products';
+	const CATEGORIES_SEARCH_ACTION = 'woocommerce_json_search_cpdfw_categories';
+	const VARIABLE_PRODUCTS_SEARCH_ACTION = 'woocommerce_json_search_cpdfw_variable_products';
 	
 	public function __construct() {
 		add_action( 'wp_ajax_' . self::CATEGORIES_SEARCH_ACTION, array( $this, 'categoriesSearchHandler' ) );

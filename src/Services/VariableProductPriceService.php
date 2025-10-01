@@ -18,7 +18,7 @@ class VariableProductPriceService {
 		}
 		
 		add_filter( 'woocommerce_get_price_html', array( $this, 'formatPrice' ), 99, 2 );
-		add_filter( 'wp_footer', array( $this, 'hideIndividualPrices' ), 9999, 2 );
+		add_filter( 'wp_print_styles', array( $this, 'hideIndividualPrices' ), 9999, 2 );
 		add_filter( 'woocommerce_get_price_html', array( $this, 'wrapVariablePriceToUpdateWhenVariationSelected' ),
 			99999, 2 );
 		
@@ -53,12 +53,15 @@ class VariableProductPriceService {
 		$this->includeUpdateVariablePriceWhenVariationSelectedScript = true;
 		
 		return apply_filters( 'custom_price_display/variable_product_price/wrapped_price',
-			'<span class="cpd-variable-product-price" data-product-id="' . $product->get_id() . '">' . $defaultPriceHTML . '</span >',
+			'<span class="cpdfw-variable-product-price" data-product-id="' . $product->get_id() . '">' . $defaultPriceHTML . '</span >',
 			$product, $productPriceConfig, $defaultPriceHTML );
 	}
 	
 	public function hideIndividualPrices() {
-		global $product;
+		
+		$productId = get_queried_object_id();
+		
+		$product = wc_get_product( $productId );
 		
 		if ( ! ( $product instanceof WC_Product_Variable ) ) {
 			return;
@@ -74,13 +77,10 @@ class VariableProductPriceService {
 			return;
 		}
 		
-		?>
-		<style>
-			.woocommerce-variation-price {
-				display: none !important;
-			}
-		</style>
-		<?php
+		// Enqueue CSS to hide individual variation prices
+		wp_enqueue_style( 'custom-price-display__hide-individual-variation-price',
+			$this->getContainer()->getFileManager()->locateAsset( 'frontend/hide-individual-variation-price.css' ),
+			array(), CustomPriceDisplayPlugin::VERSION );
 	}
 	
 	public function formatPrice( ?string $defaultPriceHTML, ?WC_Product $product ): ?string {
@@ -115,11 +115,11 @@ class VariableProductPriceService {
 			$basePrice = $product->get_variation_price( 'max', true );
 		} elseif ( 'custom' === $productPriceConfig->getProperty( 'price_display_format' ) ) {
 			
-			if ( cpd_fs()->can_use_premium_code__premium_only() ) {
+			if ( cpdfw_fs()->can_use_premium_code__premium_only() ) {
 				
 				$priceTemplate = $productPriceConfig->getProperty( 'custom_price_template' );
 				
-				$priceHTML = str_replace( [ '{cpd_lowest_price}', '{cpd_highest_price}' ], [
+				$priceHTML = str_replace( [ '{cpdfw_lowest_price}', '{cpdfw_highest_price}' ], [
 					wc_price( $product->get_variation_price( 'min', true ) ),
 					wc_price( $product->get_variation_price( 'max', true ) ),
 				], $priceTemplate );

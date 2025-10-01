@@ -149,7 +149,7 @@ class FileManager {
 		
 		$js = '.js';
 		
-		if ( defined( 'ADVANCED_PRICE_DISPLAY_PRODUCTION' ) ) {
+		if ( defined( 'CUSTOM_PRICE_DISPLAY_IS_PRODUCTION' ) ) {
 			$js = '.min.js';
 		}
 		
