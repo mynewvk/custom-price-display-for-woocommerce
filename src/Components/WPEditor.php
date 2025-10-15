@@ -81,7 +81,7 @@ class WPEditor {
 					'spellchecker',
 				), $placeholders ) ),
 			),
-			//'editor_css'       => '<style>' . $editorCSS . '</style>',
+			'editor_css'       => '<style>' . $editorCSS . '</style>',
 			'quicktags'        => array(
 				'id'      => $id,
 				'buttons' => 'strong,em,del',
