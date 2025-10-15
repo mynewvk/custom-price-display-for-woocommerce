@@ -37,7 +37,7 @@ jQuery(document).ready(function ($) {
 		}
 
 		this.$getPriceContainer = function (productId) {
-			return $('.cpd-variable-product-price[data-product-id="' + productId + '"]');
+			return $('.cpdfw-variable-product-price[data-product-id="' + productId + '"]');
 		};
 
 		this.updatePrice = function (productId, priceHTML) {

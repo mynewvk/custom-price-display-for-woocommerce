@@ -1,4 +1,4 @@
-<?php namespace CustomPriceDisplay\Components;
+<?php namespace CustomPriceDisplay\ViewComponents;
 
 use CustomPriceDisplay\Core\ServiceContainerTrait;
 use CustomPriceDisplay\CustomPriceDisplayPlugin;
@@ -7,9 +7,9 @@ class WPEditor {
 	
 	use ServiceContainerTrait;
 	
-	protected static ?self $instance = null;
+	protected static $instance = null;
 	
-	protected array $editors = array();
+	protected $editors = array();
 	
 	protected function __construct() {
 		
@@ -37,7 +37,7 @@ class WPEditor {
 			// Empty script to include custom variables for the mce.js script
 			wp_register_script( 'custom-price-display__mce-editor-localized', '', array(),
 				CustomPriceDisplayPlugin::VERSION, true );
-
+			
 			$plugins['custom-price-display-custom-mce-buttons'] = $this->getContainer()->getFileManager()->locateJSAsset( 'admin/mce' );
 			
 			return $plugins;
@@ -87,6 +87,7 @@ class WPEditor {
 				'buttons' => 'strong,em,del',
 			),
 			'drag_drop_upload' => false,
+			'description'      => '',
 		) );
 		
 		wp_editor( $content, $id, $settings );

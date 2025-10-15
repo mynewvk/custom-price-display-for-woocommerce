@@ -1,39 +1,48 @@
-jQuery(document).ready(function () {
-	// Cache DOM elements for performance and readability
-	const $priceFormat   = jQuery(".custom-price-display-product-tab .custom-price-display-template-option");
-	const $pricePrefix   = jQuery("#cpdfw_price_prefix").closest(".custom-price-display-product-option");
-	const $priceSuffix   = jQuery("#cpdfw_price_suffix").closest(".custom-price-display-product-option");
-	const $priceTemplate = jQuery("#cpdfw_custom_price_template").closest(".custom-price-display-product-option");
+jQuery(document).ready(function ($) {
+	/**
+	 * Generic function to handle visibility logic
+	 */
+	function refreshVisibility(priceFormat, prefixWrapper, suffixWrapper, templateWrapper) {
+		const selectedFormat = priceFormat.filter(":checked").val();
+
+		switch (selectedFormat) {
+			case "custom":
+				templateWrapper.show();
+				prefixWrapper.hide();
+				suffixWrapper.hide();
+				break;
+			case "default":
+			case "":
+				templateWrapper.hide();
+				prefixWrapper.hide();
+				suffixWrapper.hide();
+				break;
+			default:
+				templateWrapper.hide();
+				prefixWrapper.show();
+				suffixWrapper.show();
+		}
+	}
 
 	/**
-	 * Show or hide price options depending on the selected format.
+	 * Initialize product type visibility handling
 	 */
-	function refreshVisibility() {
-		const selectedFormat = $priceFormat.filter(":checked").val();
+	function initProductVisibility(type) {
+		const prefix = type.toUpperCase();
 
-		if (selectedFormat === "custom") {
-			// Show only the custom template option
-			$priceTemplate.show();
-			$pricePrefix.hide();
-			$priceSuffix.hide();
-		}
-		else if (selectedFormat === "default" || selectedFormat === "") {
-			// Hide all options
-			$priceTemplate.hide();
-			$pricePrefix.hide();
-			$priceSuffix.hide();
-		}
-		else {
-			// Show prefix & suffix options, hide template
-			$priceTemplate.hide();
-			$pricePrefix.show();
-			$priceSuffix.show();
-		}
+		const priceFormat = $(`[name=cpdfw_${type}_product_custom_price_format]`);
+		const prefixWrapper = $(`#cpdfw_${type}_product_price_prefix`).closest(".custom-price-display-product-option");
+		const suffixWrapper = $(`#cpdfw_${type}_product_price_suffix`).closest(".custom-price-display-product-option");
+		const templateWrapper = $(`#cpdfw_${type}_product_custom_price_template`).closest(".custom-price-display-product-option");
+
+		if (!priceFormat.length) return;
+
+		const refresh = () => refreshVisibility(priceFormat, prefixWrapper, suffixWrapper, templateWrapper);
+
+		priceFormat.on("change", refresh);
+		refresh(); // Run once on load
 	}
 
-	// If format options exist, bind event and refresh visibility on load
-	if ($priceFormat.length > 0) {
-		$priceFormat.on("change", refreshVisibility);
-		refreshVisibility(); // Run once on page load
-	}
+	// Initialize for both product types
+	["simple", "variable"].forEach(initProductVisibility);
 });

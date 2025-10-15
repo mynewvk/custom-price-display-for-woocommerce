@@ -1,6 +1,6 @@
 <?php namespace CustomPriceDisplay\Settings\CustomOptions;
 
-use CustomPriceDisplay\Components\WPEditor;
+use CustomPriceDisplay\ViewComponents\WPEditor;
 use CustomPriceDisplay\Core\ServiceContainerTrait;
 
 class RichText {

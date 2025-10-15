@@ -1,6 +1,6 @@
 <?php namespace CustomPriceDisplay\Settings\CustomOptions;
 
-use CustomPriceDisplay\Components\SwitchOption as SwitchOptionGlobal;
+use CustomPriceDisplay\ViewComponents\SwitchOption as SwitchOptionGlobal;
 use WC_Admin_Settings;
 
 class SwitchOption {
@@ -21,7 +21,7 @@ class SwitchOption {
 		if ( ! isset( $value['default'] ) ) {
 			$value['default'] = '';
 		}
-		
+
 		if ( ! isset( $value['desc'] ) ) {
 			$value['desc'] = '';
 		}
@@ -31,7 +31,7 @@ class SwitchOption {
 		}
 		
 		$option_value = $value['value'];
-		
+
 		?>
 		<tr valign="top">
 			<th scope="row" class="titledesc">

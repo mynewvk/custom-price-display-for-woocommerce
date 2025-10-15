@@ -33,7 +33,7 @@ class Settings {
 	/**
 	 * Settings sections
 	 *
-	 * @var Section[]
+	 * @var array
 	 */
 	protected $sections = array();
 	
@@ -50,6 +50,8 @@ class Settings {
 	public function __construct() {
 		$this->initCustomOptions();
 		$this->hooks();
+		
+		new LookupService();
 	}
 	
 	protected function initCustomOptions() {
@@ -65,7 +67,7 @@ class Settings {
 	 */
 	public function hooks() {
 		
-		$this->initSections();
+		add_action( 'init', array( $this, 'initSections' ), 999999 );
 		
 		add_filter( 'woocommerce_get_sections_products', array( $this, 'addSettingsSection' ), 50 );
 		add_filter( 'woocommerce_get_settings_products', function ( $settings, $current_section ) {
@@ -96,14 +98,21 @@ class Settings {
 	}
 	
 	public function initSections() {
-		$this->sections = array(
-			new VariableProducts(),
-		);
+		$this->sections = apply_filters( 'custom_price_display/settings/sections', array() );
+		
+		$this->sections = array_filter( $this->sections, function ( $section ) {
+			return class_exists( $section ) && is_subclass_of( $section, Section::class );
+		} );
+		
+		$this->sections = array_map( function ( $section ) {
+			return new $section();
+		}, $this->sections );
 	}
 	
-	public function getVariableProductsSection(): ?VariableProducts {
+	public function getSection( $name ) {
+		
 		foreach ( $this->sections as $section ) {
-			if ( $section instanceof VariableProducts ) {
+			if ( $section instanceof $name ) {
 				return $section;
 			}
 		}
@@ -116,6 +125,7 @@ class Settings {
 		$settings = array();
 		
 		foreach ( $this->sections as $section ) {
+			
 			$settings[] = array(
 				'title' => $section->getName(),
 				'type'  => 'title',

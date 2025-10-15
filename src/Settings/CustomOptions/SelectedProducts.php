@@ -1,6 +1,6 @@
 <?php namespace CustomPriceDisplay\Settings\CustomOptions;
 
-use CustomPriceDisplay\Services\LookupService;
+use CustomPriceDisplay\Settings\LookupService;
 use WC_Admin_Settings;
 
 class SelectedProducts {

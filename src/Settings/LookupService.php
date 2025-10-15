@@ -1,4 +1,4 @@
-<?php namespace CustomPriceDisplay\Services;
+<?php namespace CustomPriceDisplay\Settings;
 
 use CustomPriceDisplay\Core\ServiceContainerTrait;
 use WP_Term;
@@ -18,7 +18,7 @@ class LookupService {
 	
 	public function categoriesSearchHandler() {
 		
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
 			wp_send_json( array() );
 		}
 		

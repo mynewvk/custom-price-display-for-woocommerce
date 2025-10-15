@@ -1,4 +1,4 @@
-<?php namespace CustomPriceDisplay\Components;
+<?php namespace CustomPriceDisplay\ViewComponents;
 
 class SwitchOption {
 	

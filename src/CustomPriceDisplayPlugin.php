@@ -1,12 +1,10 @@
 <?php namespace CustomPriceDisplay;
 
-use CustomPriceDisplay\Components\WPEditor;
+use CustomPriceDisplay\ViewComponents\WPEditor;
 use CustomPriceDisplay\Core\AdminNotifier;
 use CustomPriceDisplay\Core\FileManager;
 use CustomPriceDisplay\Core\ServiceContainerTrait;
-use CustomPriceDisplay\Features\FeaturesManager;
-use CustomPriceDisplay\Services\LookupService;
-use CustomPriceDisplay\Services\VariableProductPriceService;
+use CustomPriceDisplay\Products\ProductService;
 use CustomPriceDisplay\Settings\Settings;
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
 
@@ -78,9 +76,7 @@ class CustomPriceDisplayPlugin {
 		
 		// Init Services
 		add_action( 'init', function () {
-			$this->getContainer()->initService( LookupService::class );
-			$this->getContainer()->initService( VariableProductPriceService::class );
-			$this->getContainer()->initService( FeaturesManager::class );
+			$this->getContainer()->initService( ProductService::class );
 			
 			WPEditor::instance();
 		} );
@@ -147,17 +143,5 @@ class CustomPriceDisplayPlugin {
 		if ( ! get_option( 'cpdfw_plugin_activation_timestamp', false ) ) {
 			update_option( 'cpdfw_plugin_activation_timestamp', time() );
 		}
-	}
-	
-	public static function getPluginActivationDate(): ?int {
-		return intval( get_option( 'cpdfw_plugin_activation_timestamp', 0 ) );
-	}
-	
-	public static function getContactUsURL(): string {
-		return admin_url( 'admin.php?page=custom-price-display-contact-us' );
-	}
-	
-	public static function getAccountPageURL(): string {
-		return admin_url( 'admin.php?page=custom-price-display-account' );
 	}
 }
