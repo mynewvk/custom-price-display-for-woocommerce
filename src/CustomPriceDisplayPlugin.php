@@ -12,7 +12,7 @@ use Automattic\WooCommerce\Utilities\FeaturesUtil;
 
 class CustomPriceDisplayPlugin {
 	
-	const VERSION = '1.0.0';
+	const VERSION = '1.1.0';
 	
 	use ServiceContainerTrait;
 	

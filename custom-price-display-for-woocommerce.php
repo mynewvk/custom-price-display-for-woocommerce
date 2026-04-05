@@ -2,7 +2,7 @@
 	/**
 	 * Plugin Name:       Custom Price Display for WooCommerce
 	 * Description:       Show the lowest price of a variable product, add custom price labels.
-	 * Version:           1.0.0
+	 * Version:           1.1.0
 	 * Author:            U2Code
 	 * Author URI:        https://u2code.com
 	 * License:           GNU General Public License v3.0
@@ -11,11 +11,11 @@
 	 * Domain Path:       /languages/
 	 *
 	 * WC requires at least: 7.0
-	 * WC tested up to: 10.2
+	 * WC tested up to: 10.8
 	 *
-	 * Requires at least: 5.0
-	 * Requires PHP: 7.2
-	 * Tested up to: 6.8
+	 * Requires at least: 6.0
+	 * Requires PHP: 7.4
+	 * Tested up to: 7.0
 	 *
  	*/
 	

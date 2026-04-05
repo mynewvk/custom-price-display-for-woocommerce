@@ -68,7 +68,7 @@
 			
 			$current = file_get_contents( $file );
 			
-			$current .= PHP_EOL . PHP_EOL . "define('ADVANCED_PRICE_DISPLAY_PRODUCTION', true);" . PHP_EOL;
+			$current .= PHP_EOL . PHP_EOL . "define('CUSTOM_PRICE_DISPLAY_IS_PRODUCTION', true);" . PHP_EOL;
 			
 			file_put_contents( $file, $current );
 		}
